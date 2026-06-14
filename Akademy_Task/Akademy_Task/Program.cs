@@ -4,8 +4,23 @@
     {
         static void Main(string[] args)
         {
-            string result = Task1_CompoundInterestCalculator.CalculateCompoundInterest(1200000, 5, 15.8);
-            Console.WriteLine(result);
+            Console.Write("Введите размер диагонали ");
+
+            try
+            {
+                int n = int.Parse(Console.ReadLine());
+                Task2_DiamondPrinter.PrintDiamond(n);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Ошибка: Введите целое число.");
+            }
+
+            Console.ReadKey();
         }
     }
 }
