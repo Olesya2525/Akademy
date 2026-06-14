@@ -1,0 +1,14 @@
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\bin\Debug\net8.0\Akademy_Task.exe
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\bin\Debug\net8.0\Akademy_Task.deps.json
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\bin\Debug\net8.0\Akademy_Task.runtimeconfig.json
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\bin\Debug\net8.0\Akademy_Task.dll
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\bin\Debug\net8.0\Akademy_Task.pdb
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\obj\Debug\net8.0\Akademy_Task.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\obj\Debug\net8.0\Akademy_Task.AssemblyInfoInputs.cache
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\obj\Debug\net8.0\Akademy_Task.AssemblyInfo.cs
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\obj\Debug\net8.0\Akademy_Task.csproj.CoreCompileInputs.cache
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\obj\Debug\net8.0\Akademy_Task.dll
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\obj\Debug\net8.0\refint\Akademy_Task.dll
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\obj\Debug\net8.0\Akademy_Task.pdb
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\obj\Debug\net8.0\Akademy_Task.genruntimeconfig.cache
+C:\Users\Olesya\OneDrive\Рабочий стол\3курс\Производственная практика\Akademy_Task\Akademy_Task\obj\Debug\net8.0\ref\Akademy_Task.dll
