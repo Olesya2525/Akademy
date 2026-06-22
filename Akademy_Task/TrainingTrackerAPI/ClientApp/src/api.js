@@ -17,6 +17,6 @@ export const api = {
 
     getActivitiesByUser: (userId) => axios.get(`${API_URL}/Activities/byuser/${userId}`),
     createActivity: (activity) => axios.post(`${API_URL}/Activities`, activity),
-    getDailyReport: (date) => axios.get(`${API_URL}/Activities/daily-report?date=${date}`),
+    getDailyReport: (date, userId) => axios.get(`${API_URL}/Activities/daily-report?date=${date}&userId=${userId}`),
     getDailyReportByUrl: (url) => axios.get(`${API_URL}${url}`)
 }
