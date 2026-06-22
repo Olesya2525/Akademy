@@ -112,7 +112,7 @@
                         url = `/Activities/byuser/${this.storedUserId}`
                     }
 
-                    const res = await api.getDailyReportByUrl(url)
+                    const res = await api.getDailyReport(this.date, this.storedUserId)
 
                     if (this.period === 'day') {
                         this.report = res.data
