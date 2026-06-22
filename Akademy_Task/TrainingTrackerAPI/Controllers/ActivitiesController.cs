@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrainingTrackerAPI.Data;
 using TrainingTrackerAPI.Models;
@@ -71,18 +71,15 @@ namespace TrainingTrackerAPI.Controllers
 
         // GET: api/Activities/daily-report?date=2026-06-19
         [HttpGet("daily-report")]
-        public async Task<IActionResult> GetDailyReport([FromQuery] DateTime date, [FromQuery] Guid? userId = null)
+        public async Task<IActionResult> GetDailyReport([FromQuery] DateTime date, [FromQuery] Guid userId)
         {
-            var query = _context.Activities
-                .Where(a => a.ActivityDate.Date == date.Date);
+            // Проверяем, что пользователь существует
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return BadRequest("Пользователь не найден");
 
-            
-            if (userId.HasValue)
-            {
-                query = query.Where(a => a.UserId == userId.Value);
-            }
-
-            var activities = await query
+            var activities = await _context.Activities
+                .Where(a => a.ActivityDate.Date == date.Date && a.UserId == userId)
                 .Include(a => a.Exercise)
                 .ThenInclude(e => e.Program)
                 .ToListAsync();
