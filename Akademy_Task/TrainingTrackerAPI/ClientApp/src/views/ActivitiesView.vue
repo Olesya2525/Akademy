@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <h1>My Activities</h1>
 
@@ -16,7 +16,21 @@
 
             <ul>
                 <li v-for="a in activities" :key="a.activityId">
-                    {{ a.activityDate }} - {{ a.durationMinutes }} - {{ a.note }}
+                    <span v-if="editActivityId !== a.activityId">
+                        {{ formatDate(a.activityDate) }} — {{ a.durationMinutes }} min
+                        <span v-if="a.exercise">({{ a.exercise.name }})</span>
+                        <span v-if="a.note">— {{ a.note }}</span>
+                        <button @click="startEditActivity(a)">Edit</button>
+                        <button @click="deleteActivity(a.activityId)" style="background:#e74c3c; color:white;">Delete</button>
+                    </span>
+                    <span v-else>
+                        <input v-model.number="editActivityData.exerciseId" placeholder="Exercise ID" type="number" />
+                        <input type="date" v-model="editActivityData.activityDate" />
+                        <input v-model.number="editActivityData.durationMinutes" placeholder="Minutes" type="number" />
+                        <input v-model="editActivityData.note" placeholder="Note" />
+                        <button @click="saveEditActivity">Save</button>
+                        <button @click="cancelEditActivity">Cancel</button>
+                    </span>
                 </li>
             </ul>
         </div>
@@ -40,7 +54,14 @@
                     note: ''
                 },
                 activityError: '',
-                activitySuccess: ''
+                activitySuccess: '',
+                editActivityId: null,
+                editActivityData: {
+                    exerciseId: null,
+                    activityDate: '',
+                    durationMinutes: 0,
+                    note: ''
+                }
             }
         },
         mounted() {
@@ -59,11 +80,7 @@
                     this.activities = res.data
                     this.activityError = ''
                 } catch (err) {
-                    if (err.response) {
-                        this.activityError = err.response.data || 'Error loading activities'
-                    } else {
-                        this.activityError = 'Network error - check if server is running'
-                    }
+                    this.activityError = 'Error loading activities'
                     console.error(err)
                 }
             },
@@ -71,23 +88,8 @@
                 this.activityError = ''
                 this.activitySuccess = ''
 
-                if (!this.newActivity.exerciseId) {
-                    this.activityError = 'Exercise ID is required'
-                    return
-                }
-
-                if (!this.newActivity.activityDate) {
-                    this.activityError = 'Date is required'
-                    return
-                }
-
-                if (!this.newActivity.durationMinutes || this.newActivity.durationMinutes <= 0) {
-                    this.activityError = 'Minutes must be greater than 0'
-                    return
-                }
-
-                if (this.newActivity.durationMinutes > 1440) {
-                    this.activityError = 'Minutes cannot exceed 1440 (24 hours)'
+                if (!this.newActivity.exerciseId || !this.newActivity.activityDate || !this.newActivity.durationMinutes) {
+                    this.activityError = 'Please fill in all fields'
                     return
                 }
 
@@ -100,11 +102,53 @@
                     this.activitySuccess = 'Activity created successfully'
                     this.loadActivities()
                 } catch (err) {
-                    if (err.response) {
-                        this.activityError = err.response.data || 'Error creating activity'
-                    } else {
-                        this.activityError = 'Network error - check if server is running'
-                    }
+                    this.activityError = 'Error creating activity'
+                    console.error(err)
+                }
+            },
+            startEditActivity(activity) {
+                this.editActivityId = activity.activityId
+                this.editActivityData = { ...activity }
+            },
+            async saveEditActivity() {
+                this.activityError = ''
+                this.activitySuccess = ''
+
+                if (!this.editActivityData.exerciseId || !this.editActivityData.activityDate || !this.editActivityData.durationMinutes) {
+                    this.activityError = 'Please fill in all fields'
+                    return
+                }
+
+                try {
+                    await api.updateActivity(this.editActivityId, {
+                        ...this.editActivityData,
+                        userId: this.storedUserId
+                    })
+                    this.editActivityId = null
+                    this.editActivityData = { exerciseId: null, activityDate: '', durationMinutes: 0, note: '' }
+                    this.activitySuccess = 'Activity updated successfully'
+                    this.loadActivities()
+                } catch (err) {
+                    this.activityError = 'Error updating activity'
+                    console.error(err)
+                }
+            },
+            cancelEditActivity() {
+                this.editActivityId = null
+                this.editActivityData = { exerciseId: null, activityDate: '', durationMinutes: 0, note: '' }
+            },
+            async deleteActivity(id) {
+                this.activityError = ''
+                this.activitySuccess = ''
+
+                if (!confirm('Delete this activity?')) return
+
+                try {
+                    await api.deleteActivity(id)
+                    this.activitySuccess = 'Activity deleted successfully'
+                    this.loadActivities()
+                } catch (err) {
+                    this.activityError = 'Error deleting activity'
                     console.error(err)
                 }
             }

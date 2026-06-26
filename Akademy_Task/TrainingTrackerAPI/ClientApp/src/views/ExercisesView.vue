@@ -14,10 +14,22 @@
 
             <ul>
                 <li v-for="e in exercises" :key="e.exerciseId">
-                    <strong>ID: {{ e.exerciseId }}</strong> — <strong>{{ e.name }}</strong>
-                    - Program: {{ e.program?.name || e.programId }}
-                    - {{ e.isActive ? '🟢 Active' : '🔴 Inactive' }}
-                    <button @click="deleteExercise(e.exerciseId)" style="background:#e74c3c; color:white;">Delete</button>
+                    <span v-if="editExerciseId !== e.exerciseId">
+                        <strong>ID: {{ e.exerciseId }}</strong> — <strong>{{ e.name }}</strong>
+                        - Program: {{ e.program?.name || e.programId }}
+                        - {{ e.isActive ? '🟢 Active' : '🔴 Inactive' }}
+                        <button @click="startEditExercise(e)">Edit</button>
+                        <button @click="deleteExercise(e.exerciseId)" style="background:#e74c3c; color:white;">Delete</button>
+                    </span>
+                    <span v-else>
+                        <input v-model="editExerciseData.name" placeholder="Name" />
+                        <input v-model.number="editExerciseData.programId" placeholder="Program ID" type="number" />
+                        <label>
+                            <input type="checkbox" v-model="editExerciseData.isActive" /> Active
+                        </label>
+                        <button @click="saveEditExercise">Save</button>
+                        <button @click="cancelEditExercise">Cancel</button>
+                    </span>
                 </li>
             </ul>
         </div>
@@ -36,7 +48,9 @@
                 exercises: [],
                 newExercise: { name: '', programId: null, isActive: true },
                 exerciseError: '',
-                exerciseSuccess: ''
+                exerciseSuccess: '',
+                editExerciseId: null,
+                editExerciseData: { name: '', programId: null, isActive: true }
             }
         },
         mounted() {
@@ -50,11 +64,7 @@
                     this.exercises = res.data
                     this.exerciseError = ''
                 } catch (err) {
-                    if (err.response) {
-                        this.exerciseError = err.response.data || 'Error loading exercises'
-                    } else {
-                        this.exerciseError = 'Network error - check if server is running'
-                    }
+                    this.exerciseError = 'Error loading exercises'
                     console.error(err)
                 }
             },
@@ -62,13 +72,8 @@
                 this.exerciseError = ''
                 this.exerciseSuccess = ''
 
-                if (!this.newExercise.name) {
-                    this.exerciseError = 'Exercise name is required'
-                    return
-                }
-
-                if (!this.newExercise.programId) {
-                    this.exerciseError = 'Program ID is required'
+                if (!this.newExercise.name || !this.newExercise.programId) {
+                    this.exerciseError = 'Please fill in all fields'
                     return
                 }
 
@@ -78,13 +83,40 @@
                     this.exerciseSuccess = 'Exercise created successfully'
                     this.loadExercises()
                 } catch (err) {
-                    if (err.response) {
-                        this.exerciseError = err.response.data || 'Error creating exercise'
-                    } else {
-                        this.exerciseError = 'Network error - check if server is running'
-                    }
+                    this.exerciseError = 'Error creating exercise'
                     console.error(err)
                 }
+            },
+            startEditExercise(exercise) {
+                this.editExerciseId = exercise.exerciseId
+                this.editExerciseData = { ...exercise }
+            },
+            async saveEditExercise() {
+                this.exerciseError = ''
+                this.exerciseSuccess = ''
+
+                if (!this.editExerciseData.name || !this.editExerciseData.programId) {
+                    this.exerciseError = 'Please fill in all fields'
+                    return
+                }
+
+                try {
+                    await api.updateExercise(this.editExerciseId, {
+                        ...this.editExerciseData,
+                        userId: this.storedUserId
+                    })
+                    this.editExerciseId = null
+                    this.editExerciseData = { name: '', programId: null, isActive: true }
+                    this.exerciseSuccess = 'Exercise updated successfully'
+                    this.loadExercises()
+                } catch (err) {
+                    this.exerciseError = 'Error updating exercise'
+                    console.error(err)
+                }
+            },
+            cancelEditExercise() {
+                this.editExerciseId = null
+                this.editExerciseData = { name: '', programId: null, isActive: true }
             },
             async deleteExercise(id) {
                 this.exerciseError = ''
@@ -97,11 +129,7 @@
                     this.exerciseSuccess = 'Exercise deleted successfully'
                     this.loadExercises()
                 } catch (err) {
-                    if (err.response) {
-                        this.exerciseError = err.response.data || 'Error deleting exercise'
-                    } else {
-                        this.exerciseError = 'Network error - check if server is running'
-                    }
+                    this.exerciseError = 'Error deleting exercise'
                     console.error(err)
                 }
             }
