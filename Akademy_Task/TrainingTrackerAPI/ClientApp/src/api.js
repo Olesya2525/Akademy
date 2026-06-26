@@ -18,5 +18,15 @@ export const api = {
     getActivitiesByUser: (userId) => axios.get(`${API_URL}/Activities/byuser/${userId}`),
     createActivity: (activity) => axios.post(`${API_URL}/Activities`, activity),
     getDailyReport: (date, userId) => axios.get(`${API_URL}/Activities/daily-report?date=${date}&userId=${userId}`),
-    getDailyReportByUrl: (url) => axios.get(`${API_URL}${url}`)
+    getDailyReportByUrl: (url) => axios.get(`${API_URL}${url}`),
+
+
+    updateProgram: (id, program) => axios.put(`${API_URL}/Programs/${id}`, program),
+
+
+    updateExercise: (id, exercise) => axios.put(`${API_URL}/Exercises/${id}`, exercise),
+
+    
+    updateActivity: (id, activity) => axios.put(`${API_URL}/Activities/${id}`, activity),
+    deleteActivity: (id) => axios.delete(`${API_URL}/Activities/${id}`)
 }
